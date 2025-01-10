@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+    <script>
+        let names = [];
+        let counts = [];
+
+
+        async function getData() {
+            const response = await fetch("Popular_Baby_Names_20250110.csv");
+            const data = await response.text();
+            const rows = data.split("\n").slice(1);
+            let idx = 0;
+            rows.forEach((elem) => {
+                    const row = elem.split(",");
+                    const name = row[3];
+                    const count = row[4];
+
+                    names[idx] = name
+                    counts[idx] = parseInt(count) 
+                    idx++;
+            });
+        }
+
+        async function displayChart() {
+            getData()
+            const ctx = document.getElementById('myChart');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: names , 
+                    datasets: [{
+                        label: 'Popular baby names by count',
+                        data: counts,
+                        borderColor: 'rgb(219,112,147)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        },
+                    }
+                }
+            });
+        }
+
+        displayChart()
+    </script>
+</body>
+</html>
